@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.service;
+package io.spring.releasenotes.gitlab.service;
 
 import java.util.List;
 
-import io.spring.releasenotes.github.payload.Issue;
+import io.spring.releasenotes.gitlab.payload.Issue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -40,13 +40,13 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 /**
- * Tests for {@link GithubService}.
+ * Tests for {@link GitlabService}.
  *
  * @author Madhura Bhave
  */
 @RunWith(SpringRunner.class)
-@RestClientTest({ GithubService.class })
-public class GithubServiceTests {
+@RestClientTest({ GitlabService.class })
+public class GitlabServiceTests {
 
 	private static final String MILESTONES_URL = "/repos/org/repo/milestones";
 
@@ -56,12 +56,12 @@ public class GithubServiceTests {
 	private MockRestServiceServer server;
 
 	@Autowired
-	private GithubService service;
+	private GitlabService service;
 
 	@Test
 	public void getMilestoneNumber() {
 		expectGet(MILESTONES_URL).andRespond(withJsonFrom("milestones.json"));
-		int number = this.service.getMilestoneNumber("2.1.1", "org", "repo");
+		int number = this.service.getMilestoneNumber("2.1.1",  "repo");
 		assertThat(number).isEqualTo(125);
 	}
 
@@ -69,20 +69,20 @@ public class GithubServiceTests {
 	public void getMilestoneNumberWhenNotFoundThrowsException() {
 		expectGet(MILESTONES_URL).andRespond(withJsonFrom("milestones.json"));
 		assertThatExceptionOfType(IllegalStateException.class)
-				.isThrownBy(() -> this.service.getMilestoneNumber("0.0.0", "org", "repo"));
+				.isThrownBy(() -> this.service.getMilestoneNumber("0.0.0",  "repo"));
 	}
 
 	@Test
 	public void getIssuesWhenNoIssues() {
 		expectGet(ISSUES_URL + "23&state=closed").andRespond(withJsonOf("[]"));
-		List<Issue> issues = this.service.getIssuesForMilestone(23, "org", "repo");
+		List<Issue> issues = this.service.getIssuesForMilestone(23,  "repo");
 		assertThat(issues.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void getIssuesWhenSinglePageOfIssuesPresent() {
 		expectGet(ISSUES_URL + "23&state=closed").andRespond(withJsonFrom("closed-issues-for-milestone-page-1.json"));
-		List<Issue> issues = this.service.getIssuesForMilestone(23, "org", "repo");
+		List<Issue> issues = this.service.getIssuesForMilestone(23,  "repo");
 		assertThat(issues.size()).isEqualTo(30);
 	}
 
@@ -93,7 +93,7 @@ public class GithubServiceTests {
 		expectGet(ISSUES_URL + "23&state=closed")
 				.andRespond(withJsonFrom("closed-issues-for-milestone-page-1.json").headers(headers));
 		expectGet("/page-two").andRespond(withJsonFrom("closed-issues-for-milestone-page-2.json"));
-		List<Issue> issues = this.service.getIssuesForMilestone(23, "org", "repo");
+		List<Issue> issues = this.service.getIssuesForMilestone(23,  "repo");
 		assertThat(issues.size()).isEqualTo(60);
 	}
 

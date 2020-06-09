@@ -14,32 +14,22 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.payload;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package io.spring.releasenotes.gitlab.payload;
 
 /**
- * A single Github milestone.
+ * Represents Github label.
  *
- * @author Phillip Webb
+ * @author Madhura Bhave
  */
-public class Milestone {
+public class Label {
 
-  private final int number;
+  private final String name;
 
-  private final String title;
-
-  public Milestone(@JsonProperty("number") int number, @JsonProperty("title") String title) {
-    this.number = number;
-    this.title = title;
+  public Label(String name) {
+    this.name = name;
   }
 
-  public int getNumber() {
-    return this.number;
+  public String getName() {
+    return this.name;
   }
-
-  public String getTitle() {
-    return this.title;
-  }
-
 }

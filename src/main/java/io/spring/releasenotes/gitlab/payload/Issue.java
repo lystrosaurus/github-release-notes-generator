@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.payload;
+package io.spring.releasenotes.gitlab.payload;
 
 import java.util.List;
 
@@ -39,9 +39,9 @@ public class Issue {
 
   private final PullRequest pullRequest;
 
-  public Issue(@JsonProperty("number") String number, @JsonProperty("title") String title,
-      @JsonProperty("user") User user, @JsonProperty("labels") List<Label> labels,
-      @JsonProperty("html_url") String url, @JsonProperty("pull_request") PullRequest pullRequest) {
+  public Issue(@JsonProperty("id") String number, @JsonProperty("title") String title,
+      @JsonProperty("author") User user, @JsonProperty("labels") List<Label> labels,
+      @JsonProperty("web_url") String url, @JsonProperty("pull_request") PullRequest pullRequest) {
     super();
     this.number = number;
     this.title = title;

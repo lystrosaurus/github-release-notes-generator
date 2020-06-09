@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.payload;
+package io.spring.releasenotes.gitlab.payload;
 
 import java.util.Objects;
 
@@ -31,7 +31,7 @@ public class User {
 
   private final String url;
 
-  public User(@JsonProperty("login") String name, @JsonProperty("html_url") String url) {
+  public User(@JsonProperty("name") String name, @JsonProperty("web_url") String url) {
     this.name = name;
     this.url = url;
   }

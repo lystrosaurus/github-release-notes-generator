@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.payload;
+package io.spring.releasenotes.gitlab.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents Github label.
+ * Represents a Github Pull Request.
  *
  * @author Madhura Bhave
  */
-public class Label {
+public class PullRequest {
 
-  private final String name;
+  private final String url;
 
-  public Label(@JsonProperty("name") String name) {
-    this.name = name;
+  public PullRequest(@JsonProperty("url") String url) {
+    this.url = url;
   }
 
-  public String getName() {
-    return this.name;
+  public String getUrl() {
+    return this.url;
   }
 
 }

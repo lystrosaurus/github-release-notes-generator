@@ -25,7 +25,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import io.spring.releasenotes.github.payload.Issue;
+import io.spring.releasenotes.gitlab.payload.Issue;
 import io.spring.releasenotes.properties.ApplicationProperties;
 import io.spring.releasenotes.properties.ApplicationProperties.Section;
 

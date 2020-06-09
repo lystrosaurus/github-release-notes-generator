@@ -19,8 +19,8 @@ package io.spring.releasenotes.generator;
 import java.util.Arrays;
 import java.util.List;
 
-import io.spring.releasenotes.github.payload.Issue;
-import io.spring.releasenotes.github.payload.Label;
+import io.spring.releasenotes.gitlab.payload.Issue;
+import io.spring.releasenotes.gitlab.payload.Label;
 
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;

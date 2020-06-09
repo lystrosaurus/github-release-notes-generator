@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.service;
+package io.spring.releasenotes.gitlab.service;
 
+import io.spring.releasenotes.gitlab.payload.Issue;
+import io.spring.releasenotes.gitlab.payload.Milestone;
+import io.spring.releasenotes.properties.ApplicationProperties;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import io.spring.releasenotes.github.payload.Issue;
-import io.spring.releasenotes.github.payload.Milestone;
-import io.spring.releasenotes.properties.ApplicationProperties;
-
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -42,39 +42,50 @@ import org.springframework.web.client.RestTemplate;
  * @author Phillip Webb
  */
 @Component
-public class GithubService {
+public class GitlabService {
 
   private static final Pattern LINK_PATTERN = Pattern.compile("<(.+)>; rel=\"(.+)\"");
 
-  private static final String MILESTONES_URI = "/repos/{organization}/{repository}/milestones";
+  private static final String MILESTONES_URI = "/projects/{repository}/milestones";
 
-  private static final String ISSUES_URI = "/repos/{organization}/{repository}/issues?milestone={milestone}&state=closed";
+  private static final String ISSUES_URI =
+      "/projects/{repository}/issues?milestone={milestone}&state=closed";
+
+  private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
 
   private final RestTemplate restTemplate;
 
-  public GithubService(RestTemplateBuilder builder, ApplicationProperties properties) {
-    String username = properties.getGithub().getUsername();
-    String password = properties.getGithub().getPassword();
-    if (StringUtils.hasLength(username)) {
-      builder = builder.basicAuthentication(username, password);
+  private final String privateToken;
+
+  public GitlabService(RestTemplateBuilder builder, ApplicationProperties properties) {
+    String privateToken = properties.getGitlab().getPrivateToken();
+    if (StringUtils.hasLength(privateToken)) {
+      this.privateToken = privateToken;
+    } else {
+      this.privateToken = "";
     }
-    builder = builder.rootUri(properties.getGithub().getApiUrl());
+    builder = builder.rootUri(properties.getGitlab().getApiUrl());
     this.restTemplate = builder.build();
   }
 
-  public int getMilestoneNumber(String milestoneTitle, String organization, String repository) {
+  public int getMilestoneNumber(String milestoneTitle, String repository) {
     Assert.hasText(milestoneTitle, "MilestoneName must not be empty");
-    List<Milestone> milestones = getAll(Milestone.class, MILESTONES_URI, organization, repository);
+    List<Milestone> milestones = getAll(Milestone.class, MILESTONES_URI, repository);
     for (Milestone milestone : milestones) {
       if (milestoneTitle.equalsIgnoreCase(milestone.getTitle())) {
         return milestone.getNumber();
       }
     }
-    throw new IllegalStateException("Unable to find open milestone with title '" + milestoneTitle + "'");
+    throw new IllegalStateException(
+        "Unable to find open milestone with title '" + milestoneTitle + "'");
   }
 
-  public List<Issue> getIssuesForMilestone(int milestoneNumber, String organization, String repository) {
-    return getAll(Issue.class, ISSUES_URI, organization, repository, milestoneNumber);
+  public List<Issue> getIssuesForMilestone(int milestoneNumber, String repository) {
+    return getAll(Issue.class, ISSUES_URI, repository, milestoneNumber);
+  }
+
+  public List<Issue> getIssuesForMilestone(String milestoneTitle, String repository) {
+    return getAll(Issue.class, ISSUES_URI, repository, milestoneTitle);
   }
 
   private <T> List<T> getAll(Class<T> type, String url, Object... uriVariables) {
@@ -91,8 +102,15 @@ public class GithubService {
     if (!StringUtils.hasText(url)) {
       return null;
     }
-    ResponseEntity<T[]> response = this.restTemplate.getForEntity(url, arrayType(type), uriVariables);
-    return new Page<>(Arrays.asList(response.getBody()), () -> getPage(type, getNextUrl(response.getHeaders())));
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(PRIVATE_TOKEN, privateToken);
+
+    HttpEntity<String> entity = new HttpEntity<>("", headers);
+
+    ResponseEntity<T[]> response =
+        this.restTemplate.exchange(url, HttpMethod.GET, entity, arrayType(type), uriVariables);
+    return new Page<>(
+        Arrays.asList(response.getBody()), () -> getPage(type, getNextUrl(response.getHeaders())));
   }
 
   @SuppressWarnings("unchecked")
@@ -110,5 +128,4 @@ public class GithubService {
     }
     return null;
   }
-
 }

@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.spring.releasenotes.github.payload.Issue;
-import io.spring.releasenotes.github.payload.Label;
-import io.spring.releasenotes.github.payload.PullRequest;
-import io.spring.releasenotes.github.payload.User;
-import io.spring.releasenotes.github.service.GithubService;
+import io.spring.releasenotes.gitlab.payload.Issue;
+import io.spring.releasenotes.gitlab.payload.Label;
+import io.spring.releasenotes.gitlab.payload.PullRequest;
+import io.spring.releasenotes.gitlab.payload.User;
+import io.spring.releasenotes.gitlab.service.GitlabService;
 import io.spring.releasenotes.properties.ApplicationProperties;
 import org.junit.Before;
 import org.junit.Rule;
@@ -54,14 +54,13 @@ public class ReleaseNotesGeneratorTests {
 
 	private ReleaseNotesGenerator generator;
 
-	private GithubService service;
+	private GitlabService service;
 
 	@Before
 	public void setup() {
 		ApplicationProperties properties = new ApplicationProperties();
-		properties.getGithub().setRepository("name");
-		properties.getGithub().setOrganization("org");
-		this.service = mock(GithubService.class);
+		properties.getGitlab().setRepository("name");
+		this.service = mock(GitlabService.class);
 		this.generator = new ReleaseNotesGenerator(this.service, properties);
 	}
 
@@ -72,7 +71,7 @@ public class ReleaseNotesGeneratorTests {
 		issues.add(newIssue("Enhancement 1", "2", "enhancement-1-url", Type.ENHANCEMENT));
 		issues.add(newIssue("Enhancement 2", "4", "enhancement-2-url", Type.ENHANCEMENT));
 		issues.add(newIssue("Bug 3", "3", "bug-3-url", Type.BUG));
-		given(this.service.getIssuesForMilestone(23, "org", "name")).willReturn(issues);
+		given(this.service.getIssuesForMilestone(23,  "name")).willReturn(issues);
 		File file = new File(this.temporaryFolder.getRoot().getPath() + "foo");
 		this.generator.generate("23", file.getPath());
 		assertThat(file).hasContent(from("output-with-no-prs"));
@@ -84,7 +83,7 @@ public class ReleaseNotesGeneratorTests {
 		List<Issue> issues = new ArrayList<>();
 		issues.add(newPullRequest("Bug 1", "1", Type.BUG, "bug-1-url", contributor1));
 		issues.add(newIssue("Bug 3", "3", "bug-3-url", Type.BUG));
-		given(this.service.getIssuesForMilestone(23, "org", "name")).willReturn(issues);
+		given(this.service.getIssuesForMilestone(23,  "name")).willReturn(issues);
 		File file = new File(this.temporaryFolder.getRoot().getPath() + "foo");
 		this.generator.generate("23", file.getPath());
 		assertThat(file).hasContent(from("output-with-no-enhancements"));
@@ -99,7 +98,7 @@ public class ReleaseNotesGeneratorTests {
 		issues.add(newIssue("Enhancement 2", "4", "enhancement-2-url", Type.ENHANCEMENT));
 		issues.add(newPullRequest("Enhancement 3", "5", Type.ENHANCEMENT, "enhancement-5-url", contributor1));
 		issues.add(newPullRequest("Enhancement 4", "6", Type.ENHANCEMENT, "enhancement-6-url", contributor2));
-		given(this.service.getIssuesForMilestone(23, "org", "name")).willReturn(issues);
+		given(this.service.getIssuesForMilestone(23,  "name")).willReturn(issues);
 		File file = new File(this.temporaryFolder.getRoot().getPath() + "foo");
 		this.generator.generate("23", file.getPath());
 		assertThat(file).hasContent(from("output-with-no-bugs"));
@@ -113,7 +112,7 @@ public class ReleaseNotesGeneratorTests {
 		issues.add(newIssue("Enhancement 2", "4", "enhancement-2-url", Type.ENHANCEMENT));
 		issues.add(newPullRequest("Enhancement 3", "5", Type.ENHANCEMENT, "enhancement-5-url", contributor1));
 		issues.add(newPullRequest("Enhancement 4", "6", Type.ENHANCEMENT, "enhancement-6-url", contributor1));
-		given(this.service.getIssuesForMilestone(23, "org", "name")).willReturn(issues);
+		given(this.service.getIssuesForMilestone(23,  "name")).willReturn(issues);
 		File file = new File(this.temporaryFolder.getRoot().getPath() + "foo");
 		this.generator.generate("23", file.getPath());
 		assertThat(file).hasContent(from("output-with-duplicate-contributors"));
@@ -126,8 +125,8 @@ public class ReleaseNotesGeneratorTests {
 		issues.add(newIssue("Enhancement 1", "2", "enhancement-1-url", Type.ENHANCEMENT));
 		issues.add(newIssue("Enhancement 2", "4", "enhancement-2-url", Type.ENHANCEMENT));
 		issues.add(newIssue("Bug 3", "3", "bug-3-url", Type.BUG));
-		given(this.service.getMilestoneNumber("v2.3", "org", "name")).willReturn(23);
-		given(this.service.getIssuesForMilestone(23, "org", "name")).willReturn(issues);
+		given(this.service.getMilestoneNumber("v2.3",  "name")).willReturn(23);
+		given(this.service.getIssuesForMilestone(23,  "name")).willReturn(issues);
 		File file = new File(this.temporaryFolder.getRoot().getPath() + "foo");
 		this.generator.generate("v2.3", file.getPath());
 		assertThat(file).hasContent(from("output-with-no-prs"));
@@ -137,8 +136,8 @@ public class ReleaseNotesGeneratorTests {
 	public void whenUserMentionIsInIssueTitleItIsEscaped() throws IOException {
 		List<Issue> issues = new ArrayList<>();
 		issues.add(newIssue("Bug 1 for @Value", "1", "bug-1-url", Type.BUG));
-		given(this.service.getMilestoneNumber("v2.3", "org", "name")).willReturn(23);
-		given(this.service.getIssuesForMilestone(23, "org", "name")).willReturn(issues);
+		given(this.service.getMilestoneNumber("v2.3", "name")).willReturn(23);
+		given(this.service.getIssuesForMilestone(23, "name")).willReturn(issues);
 		File file = new File(this.temporaryFolder.getRoot().getPath() + "foo");
 		this.generator.generate("v2.3", file.getPath());
 		assertThat(new String(Files.readAllBytes(file.toPath()))).contains("Bug 1 for `@Value`");
@@ -148,8 +147,8 @@ public class ReleaseNotesGeneratorTests {
 	public void whenEscapedUserMentionIsInIssueTitleItIsNotEscapedAgain() throws IOException {
 		List<Issue> issues = new ArrayList<>();
 		issues.add(newIssue("Bug 1 for `@Value`", "1", "bug-1-url", Type.BUG));
-		given(this.service.getMilestoneNumber("v2.3", "org", "name")).willReturn(23);
-		given(this.service.getIssuesForMilestone(23, "org", "name")).willReturn(issues);
+		given(this.service.getMilestoneNumber("v2.3", "name")).willReturn(23);
+		given(this.service.getIssuesForMilestone(23,  "name")).willReturn(issues);
 		File file = new File(this.temporaryFolder.getRoot().getPath() + "foo");
 		this.generator.generate("v2.3", file.getPath());
 		assertThat(new String(Files.readAllBytes(file.toPath()))).contains("Bug 1 for `@Value`");

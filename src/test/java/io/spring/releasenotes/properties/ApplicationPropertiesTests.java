@@ -16,9 +16,9 @@
 
 package io.spring.releasenotes.properties;
 
+import io.spring.releasenotes.properties.ApplicationProperties.Gitlab;
 import java.util.List;
 
-import io.spring.releasenotes.properties.ApplicationProperties.Github;
 import io.spring.releasenotes.properties.ApplicationProperties.Section;
 import org.junit.Test;
 
@@ -44,11 +44,10 @@ public class ApplicationPropertiesTests {
 				new ClassPathResource("test-application.yml", getClass()));
 		Binder binder = new Binder(ConfigurationPropertySources.from(yaml));
 		ApplicationProperties properties = binder.bind("releasenotes", ApplicationProperties.class).get();
-		Github github = properties.getGithub();
-		assertThat(github.getUsername()).isEqualTo("testuser");
-		assertThat(github.getPassword()).isEqualTo("testpass");
-		assertThat(github.getOrganization()).isEqualTo("testorg");
-		assertThat(github.getRepository()).isEqualTo("testrepo");
+		Gitlab gitlab = properties.getGitlab();
+		assertThat(gitlab.getUsername()).isEqualTo("testuser");
+		assertThat(gitlab.getPrivateToken()).isEqualTo("privateToken");
+		assertThat(gitlab.getRepository()).isEqualTo("testrepo");
 		List<Section> sections = properties.getSections();
 		assertThat(sections.get(0).getTitle()).isEqualTo("New Features");
 		assertThat(sections.get(0).getEmoji()).isEqualTo(":star:");

@@ -16,6 +16,10 @@
 
 package io.spring.releasenotes.generator;
 
+import io.spring.releasenotes.gitlab.payload.Issue;
+import io.spring.releasenotes.gitlab.payload.User;
+import io.spring.releasenotes.gitlab.service.GitlabService;
+import io.spring.releasenotes.properties.ApplicationProperties;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,18 +28,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import io.spring.releasenotes.github.payload.Issue;
-import io.spring.releasenotes.github.payload.User;
-import io.spring.releasenotes.github.service.GithubService;
-import io.spring.releasenotes.properties.ApplicationProperties;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.FileCopyUtils;
 
 /**
- * Generates a file which includes bug fixes, enhancements and contributors for a given
- * milestone.
+ * Generates a file which includes bug fixes, enhancements and contributors for a given milestone.
  *
  * @author Madhura Bhave
  * @author Phillip Webb
@@ -43,47 +40,39 @@ import org.springframework.util.FileCopyUtils;
 @Configuration
 public class ReleaseNotesGenerator {
 
-  private static final String THANK_YOU = "## :heart: Contributors\n\n"
-      + "We'd like to thank all the contributors who worked on this release!";
+  private static final String THANK_YOU =
+      "## :heart: Contributors\n\n"
+          + "We'd like to thank all the contributors who worked on this release!";
 
   private static final Pattern ghUserMentionPattern = Pattern.compile("(^|[^\\w`])(@[\\w-]+)");
 
-  private final GithubService service;
+  private final GitlabService service;
 
-  private final String organization;
+  private final String privateToken;
 
   private final String repository;
 
   private final ReleaseNotesSections sections;
 
-  public ReleaseNotesGenerator(GithubService service, ApplicationProperties properties) {
+  public ReleaseNotesGenerator(GitlabService service, ApplicationProperties properties) {
     this.service = service;
-    this.organization = properties.getGithub().getOrganization();
-    this.repository = properties.getGithub().getRepository();
+    this.privateToken = properties.getGitlab().getPrivateToken();
+    this.repository = properties.getGitlab().getRepository();
     this.sections = new ReleaseNotesSections(properties);
   }
 
   /**
-   * Generates a file at the given path which includes bug fixes, enhancements and
-   * contributors for the given milestone.
+   * Generates a file at the given path which includes bug fixes, enhancements and contributors for
+   * the given milestone.
+   *
    * @param milestone the milestone to generate the release notes for
    * @param path the path to the file
    * @throws IOException if writing to file failed
    */
   public void generate(String milestone, String path) throws IOException {
-    int milestoneNumber = getMilestoneNumber(milestone);
-    List<Issue> issues = this.service.getIssuesForMilestone(milestoneNumber, this.organization, this.repository);
+    List<Issue> issues = this.service.getIssuesForMilestone(milestone, this.repository);
     String content = generateContent(issues);
     writeContentToFile(content, path);
-  }
-
-  private int getMilestoneNumber(String milestone) {
-    try {
-      return Integer.parseInt(milestone);
-    }
-    catch (NumberFormatException ex) {
-      return this.service.getMilestoneNumber(milestone, this.organization, this.repository);
-    }
   }
 
   private String generateContent(List<Issue> issues) {
@@ -96,12 +85,14 @@ public class ReleaseNotesGenerator {
     return content.toString();
   }
 
-  private void addSectionContent(StringBuilder content, Map<ReleaseNotesSection, List<Issue>> sectionIssues) {
-    sectionIssues.forEach((section, issues) -> {
-      content.append((content.length() != 0) ? "\n" : "");
-      content.append("## ").append(section).append("\n\n");
-      issues.stream().map(this::getFormattedIssue).forEach(content::append);
-    });
+  private void addSectionContent(
+      StringBuilder content, Map<ReleaseNotesSection, List<Issue>> sectionIssues) {
+    sectionIssues.forEach(
+        (section, issues) -> {
+          content.append((content.length() != 0) ? "\n" : "");
+          content.append("## ").append(section).append("\n\n");
+          issues.stream().map(this::getFormattedIssue).forEach(content::append);
+        });
   }
 
   private String getFormattedIssue(Issue issue) {
@@ -115,7 +106,9 @@ public class ReleaseNotesGenerator {
   }
 
   private Set<User> getContributors(List<Issue> issues) {
-    return issues.stream().filter((issue) -> issue.getPullRequest() != null).map(Issue::getUser)
+    return issues.stream()
+        .filter((issue) -> issue.getPullRequest() != null)
+        .map(Issue::getUser)
         .collect(Collectors.toSet());
   }
 
@@ -131,5 +124,4 @@ public class ReleaseNotesGenerator {
   private void writeContentToFile(String content, String path) throws IOException {
     FileCopyUtils.copy(content, new FileWriter(new File(path)));
   }
-
 }

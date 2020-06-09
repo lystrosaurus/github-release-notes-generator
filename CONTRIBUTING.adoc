@@ -26,7 +26,7 @@ given the ability to merge pull requests.
 None of these is essential for a pull request, but they will all help.  They can also be
 added after the original pull request but before a merge.
 
-* We use the https://github.com/spring-io/spring-javaformat/[Spring JavaFormat] project
+* We use the https://gitlab.com/spring-io/spring-javaformat/[Spring JavaFormat] project
   to apply code formatting conventions.
 * The build includes checkstyle rules for many of our code conventions. Run
   `./mvnw verify` if you want to check you changes are

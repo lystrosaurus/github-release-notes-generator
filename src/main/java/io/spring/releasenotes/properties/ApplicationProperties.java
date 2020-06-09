@@ -18,7 +18,6 @@ package io.spring.releasenotes.properties;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -30,18 +29,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "releasenotes")
 public class ApplicationProperties {
 
-  /**
-   * GitHub properties.
-   */
-  private final Github github = new Github();
+  /** GitLab properties. */
+  private final Gitlab gitlab = new Gitlab();
 
-  /**
-   * Section definitions in the order that they should appear.
-   */
+  /** Section definitions in the order that they should appear. */
   private List<Section> sections = new ArrayList<>();
 
-  public Github getGithub() {
-    return this.github;
+  public Gitlab getGitlab() {
+    return this.gitlab;
   }
 
   public List<Section> getSections() {
@@ -52,34 +47,19 @@ public class ApplicationProperties {
     this.sections = sections;
   }
 
-  /**
-   * Github related properties.
-   */
-  public static class Github {
+  /** Github related properties. */
+  public static class Gitlab {
 
-    /**
-     * Base url to github's api.
-     */
-    private String apiUrl = "https://api.github.com";
+    /** Base url to gitlab's api. */
+    private String apiUrl = "https://gitlab.example.com/api/v4/";
 
-    /**
-     * The username for the github user.
-     */
+    /** The username for the gitlab user. */
     private String username;
 
-    /**
-     * The password for the github user.
-     */
-    private String password;
+    /** The private token for the gitlab user. */
+    private String privateToken;
 
-    /**
-     * The github org this repository is under.
-     */
-    private String organization;
-
-    /**
-     * The name of the github repository.
-     */
+    /** The name of the gitlab repository. */
     private String repository;
 
     public String getApiUrl() {
@@ -98,20 +78,12 @@ public class ApplicationProperties {
       this.username = username;
     }
 
-    public String getPassword() {
-      return this.password;
+    public String getPrivateToken() {
+      return privateToken;
     }
 
-    public void setPassword(String password) {
-      this.password = password;
-    }
-
-    public String getOrganization() {
-      return this.organization;
-    }
-
-    public void setOrganization(String organization) {
-      this.organization = organization;
+    public void setPrivateToken(String privateToken) {
+      this.privateToken = privateToken;
     }
 
     public String getRepository() {
@@ -121,27 +93,18 @@ public class ApplicationProperties {
     public void setRepository(String repository) {
       this.repository = repository;
     }
-
   }
 
-  /**
-   * Properties for a single release notes section.
-   */
+  /** Properties for a single release notes section. */
   public static class Section {
 
-    /**
-     * The title of the section.
-     */
+    /** The title of the section. */
     private String title;
 
-    /**
-     * The emoji character to use, for example ":star:".
-     */
+    /** The emoji character to use, for example ":star:". */
     private String emoji;
 
-    /**
-     * The labels used to identify if an issue is for the section.
-     */
+    /** The labels used to identify if an issue is for the section. */
     private List<String> labels = new ArrayList<>();
 
     public String getTitle() {
@@ -167,7 +130,5 @@ public class ApplicationProperties {
     public void setLabels(List<String> labels) {
       this.labels = labels;
     }
-
   }
-
 }

@@ -2,13 +2,13 @@
 
 To generate markdown release notes that comprise the list of bugs and issues in a GitHub milestone follow these steps:
 
-- Download a https://github.com/spring-io/github-release-notes-generator/releases[release JAR] or use the https://hub.docker.com/r/springio/github-release-notes-generator/[Docker image].
+- Download a https://gitlab.com/spring-io/gitlab-release-notes-generator/releases[release JAR] or use the https://hub.docker.com/r/springio/gitlab-release-notes-generator/[Docker image].
 - Configure the application with the following properties:
 
 [source,yaml]
 ----
 releasenotes:
-  github:
+  gitlab:
     organization:
     repository:
     username:
@@ -16,16 +16,16 @@ releasenotes:
 ----
 
 NOTE: When generating release notes for a public repository, the `username` and `password` properties are optional.
-However, specifying them ensures that you don't hit https://developer.github.com/v3/?#rate-limiting[GitHub's rate limit] easily.
+However, specifying them ensures that you don't hit https://developer.gitlab.com/v3/?#rate-limiting[GitHub's rate limit] easily.
 
-If you're using GitHub enterprise, the base url can be set using `releasenotes.github.api-url`.
+If you're using GitHub enterprise, the base url can be set using `releasenotes.gitlab.api-url`.
 
-TIP: If you are only configuring a few properties you can alternatively use application arguments such as `--releasenotes.github.organization=...`.
+TIP: If you are only configuring a few properties you can alternatively use application arguments such as `--releasenotes.gitlab.organization=...`.
 
 - Run the following commands:
 
 ----
-$ java -jar github-release-notes-generator.jar <milestone> <path_to_generate_file>
+$ java -jar gitlab-release-notes-generator.jar <milestone> <path_to_generate_file>
 ----
 
 NOTE: The `<milestone>` may either refer to the milestone number or a name.

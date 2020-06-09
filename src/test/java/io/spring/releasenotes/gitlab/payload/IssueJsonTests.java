@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.payload;
+package io.spring.releasenotes.gitlab.payload;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,22 +27,23 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link Milestone}.
+ * Tests for {@link Issue}.
  *
+ * @author Madhura Bhave
  * @author Phillip Webb
  */
 @RunWith(SpringRunner.class)
 @JsonTest
-public class MilestoneJsonTests {
+public class IssueJsonTests {
 
 	@Autowired
-	private JacksonTester<Milestone> json;
+	private JacksonTester<Issue> json;
 
 	@Test
 	public void issueDeserialization() throws Exception {
-		Milestone milestone = this.json.read("milestone.json").getObject();
-		assertThat(milestone.getNumber()).isEqualTo(94);
-		assertThat(milestone.getTitle()).isEqualTo("General Backlog");
+		Issue issue = this.json.read("issue.json").getObject();
+		assertThat(issue.getNumber()).isEqualTo("12730");
+		assertThat(issue.getLabels()).flatExtracting(Label::getName).containsExactly("type: regression");
 	}
 
 }

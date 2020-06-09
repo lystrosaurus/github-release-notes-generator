@@ -14,25 +14,32 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.payload;
+package io.spring.releasenotes.gitlab.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents a Github Pull Request.
+ * A single Github milestone.
  *
- * @author Madhura Bhave
+ * @author Phillip Webb
  */
-public class PullRequest {
+public class Milestone {
 
-  private final String url;
+  private final int number;
 
-  public PullRequest(@JsonProperty("url") String url) {
-    this.url = url;
+  private final String title;
+
+  public Milestone(@JsonProperty("id") int number, @JsonProperty("title") String title) {
+    this.number = number;
+    this.title = title;
   }
 
-  public String getUrl() {
-    return this.url;
+  public int getNumber() {
+    return this.number;
+  }
+
+  public String getTitle() {
+    return this.title;
   }
 
 }

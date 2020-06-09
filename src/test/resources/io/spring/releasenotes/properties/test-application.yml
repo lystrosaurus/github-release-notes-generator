@@ -1,8 +1,7 @@
 releasenotes:
-  github:
+  gitlab:
     username: testuser
-    password: testpass
-    organization: testorg
+    privateToken: testpass
     repository: testrepo
   sections:
   - title: "New Features"

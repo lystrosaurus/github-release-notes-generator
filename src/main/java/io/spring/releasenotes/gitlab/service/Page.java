@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.releasenotes.github.service;
+package io.spring.releasenotes.gitlab.service;
 
 import java.util.List;
 import java.util.function.Supplier;

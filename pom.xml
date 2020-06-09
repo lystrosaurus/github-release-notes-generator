@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.spring.githubreleasenotesgenerator</groupId>
-	<artifactId>github-release-notes-generator</artifactId>
+	<artifactId>gitlab-release-notes-generator</artifactId>
 	<version>${revision}</version>
 	<packaging>jar</packaging>
 	<description>Release notes generator for GitHub projects</description>
@@ -46,7 +46,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>github-release-notes-generator</finalName>
+		<finalName>gitlab-release-notes-generator</finalName>
 		<plugins>
 			<plugin>
 				<groupId>io.spring.javaformat</groupId>
