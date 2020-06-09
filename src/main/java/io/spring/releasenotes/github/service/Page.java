@@ -27,28 +27,28 @@ import java.util.function.Supplier;
  */
 class Page<T> {
 
-	private final List<T> content;
+  private final List<T> content;
 
-	private final Supplier<Page<T>> nextPageSupplier;
+  private final Supplier<Page<T>> nextPageSupplier;
 
-	/**
-	 * Creates a new {@code StandardPage} that has the given {@code content}. The given
-	 * {@code nextSupplier} will be used to obtain the next page {@link #getNextPage()
-	 * when requested}.
-	 * @param content the content
-	 * @param nextPageSupplier the supplier of the next page
-	 */
-	Page(List<T> content, Supplier<Page<T>> nextPageSupplier) {
-		this.content = content;
-		this.nextPageSupplier = nextPageSupplier;
-	}
+  /**
+   * Creates a new {@code StandardPage} that has the given {@code content}. The given
+   * {@code nextSupplier} will be used to obtain the next page {@link #getNextPage()
+   * when requested}.
+   * @param content the content
+   * @param nextPageSupplier the supplier of the next page
+   */
+  Page(List<T> content, Supplier<Page<T>> nextPageSupplier) {
+    this.content = content;
+    this.nextPageSupplier = nextPageSupplier;
+  }
 
-	List<T> getContent() {
-		return this.content;
-	}
+  List<T> getContent() {
+    return this.content;
+  }
 
-	Page<T> getNextPage() {
-		return this.nextPageSupplier.get();
-	}
+  Page<T> getNextPage() {
+    return this.nextPageSupplier.get();
+  }
 
 }

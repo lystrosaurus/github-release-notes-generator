@@ -32,39 +32,39 @@ import org.springframework.util.CollectionUtils;
  */
 class ReleaseNotesSection {
 
-	private final String title;
+  private final String title;
 
-	private final String emoji;
+  private final String emoji;
 
-	private final List<String> labels;
+  private final List<String> labels;
 
-	ReleaseNotesSection(String title, String emoji, String... labels) {
-		this(title, emoji, Arrays.asList(labels));
-	}
+  ReleaseNotesSection(String title, String emoji, String... labels) {
+    this(title, emoji, Arrays.asList(labels));
+  }
 
-	ReleaseNotesSection(String title, String emoji, List<String> labels) {
-		Assert.hasText(title, "Title must not be empty");
-		Assert.hasText(emoji, "Emoji must not be empty");
-		Assert.isTrue(!CollectionUtils.isEmpty(labels), "Labels must not be empty");
-		this.title = title;
-		this.emoji = emoji;
-		this.labels = labels;
-	}
+  ReleaseNotesSection(String title, String emoji, List<String> labels) {
+    Assert.hasText(title, "Title must not be empty");
+    Assert.hasText(emoji, "Emoji must not be empty");
+    Assert.isTrue(!CollectionUtils.isEmpty(labels), "Labels must not be empty");
+    this.title = title;
+    this.emoji = emoji;
+    this.labels = labels;
+  }
 
-	boolean isMatchFor(Issue issue) {
-		for (String candidate : this.labels) {
-			for (Label label : issue.getLabels()) {
-				if (label.getName().contains(candidate)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+  boolean isMatchFor(Issue issue) {
+    for (String candidate : this.labels) {
+      for (Label label : issue.getLabels()) {
+        if (label.getName().contains(candidate)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
-	@Override
-	public String toString() {
-		return this.emoji + " " + this.title;
-	}
+  @Override
+  public String toString() {
+    return this.emoji + " " + this.title;
+  }
 
 }

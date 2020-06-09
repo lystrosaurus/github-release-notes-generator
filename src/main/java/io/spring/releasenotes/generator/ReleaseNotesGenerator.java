@@ -43,93 +43,93 @@ import org.springframework.util.FileCopyUtils;
 @Configuration
 public class ReleaseNotesGenerator {
 
-	private static final String THANK_YOU = "## :heart: Contributors\n\n"
-			+ "We'd like to thank all the contributors who worked on this release!";
+  private static final String THANK_YOU = "## :heart: Contributors\n\n"
+      + "We'd like to thank all the contributors who worked on this release!";
 
-	private static final Pattern ghUserMentionPattern = Pattern.compile("(^|[^\\w`])(@[\\w-]+)");
+  private static final Pattern ghUserMentionPattern = Pattern.compile("(^|[^\\w`])(@[\\w-]+)");
 
-	private final GithubService service;
+  private final GithubService service;
 
-	private final String organization;
+  private final String organization;
 
-	private final String repository;
+  private final String repository;
 
-	private final ReleaseNotesSections sections;
+  private final ReleaseNotesSections sections;
 
-	public ReleaseNotesGenerator(GithubService service, ApplicationProperties properties) {
-		this.service = service;
-		this.organization = properties.getGithub().getOrganization();
-		this.repository = properties.getGithub().getRepository();
-		this.sections = new ReleaseNotesSections(properties);
-	}
+  public ReleaseNotesGenerator(GithubService service, ApplicationProperties properties) {
+    this.service = service;
+    this.organization = properties.getGithub().getOrganization();
+    this.repository = properties.getGithub().getRepository();
+    this.sections = new ReleaseNotesSections(properties);
+  }
 
-	/**
-	 * Generates a file at the given path which includes bug fixes, enhancements and
-	 * contributors for the given milestone.
-	 * @param milestone the milestone to generate the release notes for
-	 * @param path the path to the file
-	 * @throws IOException if writing to file failed
-	 */
-	public void generate(String milestone, String path) throws IOException {
-		int milestoneNumber = getMilestoneNumber(milestone);
-		List<Issue> issues = this.service.getIssuesForMilestone(milestoneNumber, this.organization, this.repository);
-		String content = generateContent(issues);
-		writeContentToFile(content, path);
-	}
+  /**
+   * Generates a file at the given path which includes bug fixes, enhancements and
+   * contributors for the given milestone.
+   * @param milestone the milestone to generate the release notes for
+   * @param path the path to the file
+   * @throws IOException if writing to file failed
+   */
+  public void generate(String milestone, String path) throws IOException {
+    int milestoneNumber = getMilestoneNumber(milestone);
+    List<Issue> issues = this.service.getIssuesForMilestone(milestoneNumber, this.organization, this.repository);
+    String content = generateContent(issues);
+    writeContentToFile(content, path);
+  }
 
-	private int getMilestoneNumber(String milestone) {
-		try {
-			return Integer.parseInt(milestone);
-		}
-		catch (NumberFormatException ex) {
-			return this.service.getMilestoneNumber(milestone, this.organization, this.repository);
-		}
-	}
+  private int getMilestoneNumber(String milestone) {
+    try {
+      return Integer.parseInt(milestone);
+    }
+    catch (NumberFormatException ex) {
+      return this.service.getMilestoneNumber(milestone, this.organization, this.repository);
+    }
+  }
 
-	private String generateContent(List<Issue> issues) {
-		StringBuilder content = new StringBuilder();
-		addSectionContent(content, this.sections.collate(issues));
-		Set<User> contributors = getContributors(issues);
-		if (!contributors.isEmpty()) {
-			addContributorsContent(content, contributors);
-		}
-		return content.toString();
-	}
+  private String generateContent(List<Issue> issues) {
+    StringBuilder content = new StringBuilder();
+    addSectionContent(content, this.sections.collate(issues));
+    Set<User> contributors = getContributors(issues);
+    if (!contributors.isEmpty()) {
+      addContributorsContent(content, contributors);
+    }
+    return content.toString();
+  }
 
-	private void addSectionContent(StringBuilder content, Map<ReleaseNotesSection, List<Issue>> sectionIssues) {
-		sectionIssues.forEach((section, issues) -> {
-			content.append((content.length() != 0) ? "\n" : "");
-			content.append("## ").append(section).append("\n\n");
-			issues.stream().map(this::getFormattedIssue).forEach(content::append);
-		});
-	}
+  private void addSectionContent(StringBuilder content, Map<ReleaseNotesSection, List<Issue>> sectionIssues) {
+    sectionIssues.forEach((section, issues) -> {
+      content.append((content.length() != 0) ? "\n" : "");
+      content.append("## ").append(section).append("\n\n");
+      issues.stream().map(this::getFormattedIssue).forEach(content::append);
+    });
+  }
 
-	private String getFormattedIssue(Issue issue) {
-		String title = issue.getTitle();
-		title = ghUserMentionPattern.matcher(title).replaceAll("$1`$2`");
-		return "- " + title + " " + getLinkToIssue(issue) + "\n";
-	}
+  private String getFormattedIssue(Issue issue) {
+    String title = issue.getTitle();
+    title = ghUserMentionPattern.matcher(title).replaceAll("$1`$2`");
+    return "- " + title + " " + getLinkToIssue(issue) + "\n";
+  }
 
-	private String getLinkToIssue(Issue issue) {
-		return "[#" + issue.getNumber() + "]" + "(" + issue.getUrl() + ")";
-	}
+  private String getLinkToIssue(Issue issue) {
+    return "[#" + issue.getNumber() + "]" + "(" + issue.getUrl() + ")";
+  }
 
-	private Set<User> getContributors(List<Issue> issues) {
-		return issues.stream().filter((issue) -> issue.getPullRequest() != null).map(Issue::getUser)
-				.collect(Collectors.toSet());
-	}
+  private Set<User> getContributors(List<Issue> issues) {
+    return issues.stream().filter((issue) -> issue.getPullRequest() != null).map(Issue::getUser)
+        .collect(Collectors.toSet());
+  }
 
-	private void addContributorsContent(StringBuilder content, Set<User> contributors) {
-		content.append("\n" + THANK_YOU + "\n\n");
-		contributors.stream().map(this::formatContributors).forEach(content::append);
-	}
+  private void addContributorsContent(StringBuilder content, Set<User> contributors) {
+    content.append("\n" + THANK_YOU + "\n\n");
+    contributors.stream().map(this::formatContributors).forEach(content::append);
+  }
 
-	private String formatContributors(User c) {
-		return "- [@" + c.getName() + "]" + "(" + c.getUrl() + ")\n";
-	}
+  private String formatContributors(User c) {
+    return "- [@" + c.getName() + "]" + "(" + c.getUrl() + ")\n";
+  }
 
-	private void writeContentToFile(String content, String path) throws IOException {
-		FileCopyUtils.copy(content, new FileWriter(new File(path)));
-	}
+  private void writeContentToFile(String content, String path) throws IOException {
+    FileCopyUtils.copy(content, new FileWriter(new File(path)));
+  }
 
 }

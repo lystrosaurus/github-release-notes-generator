@@ -35,27 +35,27 @@ import org.springframework.util.Assert;
 @Component
 public class CommandProcessor implements ApplicationRunner {
 
-	private final ReleaseNotesGenerator generator;
+  private final ReleaseNotesGenerator generator;
 
-	public CommandProcessor(ReleaseNotesGenerator generator) {
-		this.generator = generator;
-	}
+  public CommandProcessor(ReleaseNotesGenerator generator) {
+    this.generator = generator;
+  }
 
-	@Override
-	public void run(ApplicationArguments args) throws IOException {
-		run(args.getNonOptionArgs());
-	}
+  @Override
+  public void run(ApplicationArguments args) throws IOException {
+    run(args.getNonOptionArgs());
+  }
 
-	private void run(List<String> args) throws IOException {
-		String milestone = args.get(0);
-		String path = args.get(1);
-		run(milestone, path);
-	}
+  private void run(List<String> args) throws IOException {
+    String milestone = args.get(0);
+    String path = args.get(1);
+    run(milestone, path);
+  }
 
-	private void run(String milestone, String path) throws IOException {
-		Assert.hasLength(milestone, "Milestone must be specified");
-		Assert.hasLength(path, "Path must be specified");
-		this.generator.generate(milestone, path);
-	}
+  private void run(String milestone, String path) throws IOException {
+    Assert.hasLength(milestone, "Milestone must be specified");
+    Assert.hasLength(path, "Path must be specified");
+    this.generator.generate(milestone, path);
+  }
 
 }

@@ -27,38 +27,38 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class User {
 
-	private final String name;
+  private final String name;
 
-	private final String url;
+  private final String url;
 
-	public User(@JsonProperty("login") String name, @JsonProperty("html_url") String url) {
-		this.name = name;
-		this.url = url;
-	}
+  public User(@JsonProperty("login") String name, @JsonProperty("html_url") String url) {
+    this.name = name;
+    this.url = url;
+  }
 
-	public String getName() {
-		return this.name;
-	}
+  public String getName() {
+    return this.name;
+  }
 
-	public String getUrl() {
-		return this.url;
-	}
+  public String getUrl() {
+    return this.url;
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		User other = (User) o;
-		return Objects.equals(this.name, other.name) && Objects.equals(this.url, other.url);
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    User other = (User) o;
+    return Objects.equals(this.name, other.name) && Objects.equals(this.url, other.url);
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.name, this.url);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.name, this.url);
+  }
 
 }

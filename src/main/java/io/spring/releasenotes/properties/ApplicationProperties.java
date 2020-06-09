@@ -30,144 +30,144 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "releasenotes")
 public class ApplicationProperties {
 
-	/**
-	 * GitHub properties.
-	 */
-	private final Github github = new Github();
+  /**
+   * GitHub properties.
+   */
+  private final Github github = new Github();
 
-	/**
-	 * Section definitions in the order that they should appear.
-	 */
-	private List<Section> sections = new ArrayList<>();
+  /**
+   * Section definitions in the order that they should appear.
+   */
+  private List<Section> sections = new ArrayList<>();
 
-	public Github getGithub() {
-		return this.github;
-	}
+  public Github getGithub() {
+    return this.github;
+  }
 
-	public List<Section> getSections() {
-		return this.sections;
-	}
+  public List<Section> getSections() {
+    return this.sections;
+  }
 
-	public void setSections(List<Section> sections) {
-		this.sections = sections;
-	}
+  public void setSections(List<Section> sections) {
+    this.sections = sections;
+  }
 
-	/**
-	 * Github related properties.
-	 */
-	public static class Github {
+  /**
+   * Github related properties.
+   */
+  public static class Github {
 
-		/**
-		 * Base url to github's api.
-		 */
-		private String apiUrl = "https://api.github.com";
+    /**
+     * Base url to github's api.
+     */
+    private String apiUrl = "https://api.github.com";
 
-		/**
-		 * The username for the github user.
-		 */
-		private String username;
+    /**
+     * The username for the github user.
+     */
+    private String username;
 
-		/**
-		 * The password for the github user.
-		 */
-		private String password;
+    /**
+     * The password for the github user.
+     */
+    private String password;
 
-		/**
-		 * The github org this repository is under.
-		 */
-		private String organization;
+    /**
+     * The github org this repository is under.
+     */
+    private String organization;
 
-		/**
-		 * The name of the github repository.
-		 */
-		private String repository;
+    /**
+     * The name of the github repository.
+     */
+    private String repository;
 
-		public String getApiUrl() {
-			return this.apiUrl;
-		}
+    public String getApiUrl() {
+      return this.apiUrl;
+    }
 
-		public void setApiUrl(String apiUrl) {
-			this.apiUrl = apiUrl;
-		}
+    public void setApiUrl(String apiUrl) {
+      this.apiUrl = apiUrl;
+    }
 
-		public String getUsername() {
-			return this.username;
-		}
+    public String getUsername() {
+      return this.username;
+    }
 
-		public void setUsername(String username) {
-			this.username = username;
-		}
+    public void setUsername(String username) {
+      this.username = username;
+    }
 
-		public String getPassword() {
-			return this.password;
-		}
+    public String getPassword() {
+      return this.password;
+    }
 
-		public void setPassword(String password) {
-			this.password = password;
-		}
+    public void setPassword(String password) {
+      this.password = password;
+    }
 
-		public String getOrganization() {
-			return this.organization;
-		}
+    public String getOrganization() {
+      return this.organization;
+    }
 
-		public void setOrganization(String organization) {
-			this.organization = organization;
-		}
+    public void setOrganization(String organization) {
+      this.organization = organization;
+    }
 
-		public String getRepository() {
-			return this.repository;
-		}
+    public String getRepository() {
+      return this.repository;
+    }
 
-		public void setRepository(String repository) {
-			this.repository = repository;
-		}
+    public void setRepository(String repository) {
+      this.repository = repository;
+    }
 
-	}
+  }
 
-	/**
-	 * Properties for a single release notes section.
-	 */
-	public static class Section {
+  /**
+   * Properties for a single release notes section.
+   */
+  public static class Section {
 
-		/**
-		 * The title of the section.
-		 */
-		private String title;
+    /**
+     * The title of the section.
+     */
+    private String title;
 
-		/**
-		 * The emoji character to use, for example ":star:".
-		 */
-		private String emoji;
+    /**
+     * The emoji character to use, for example ":star:".
+     */
+    private String emoji;
 
-		/**
-		 * The labels used to identify if an issue is for the section.
-		 */
-		private List<String> labels = new ArrayList<>();
+    /**
+     * The labels used to identify if an issue is for the section.
+     */
+    private List<String> labels = new ArrayList<>();
 
-		public String getTitle() {
-			return this.title;
-		}
+    public String getTitle() {
+      return this.title;
+    }
 
-		public void setTitle(String title) {
-			this.title = title;
-		}
+    public void setTitle(String title) {
+      this.title = title;
+    }
 
-		public String getEmoji() {
-			return this.emoji;
-		}
+    public String getEmoji() {
+      return this.emoji;
+    }
 
-		public void setEmoji(String emoji) {
-			this.emoji = emoji;
-		}
+    public void setEmoji(String emoji) {
+      this.emoji = emoji;
+    }
 
-		public List<String> getLabels() {
-			return this.labels;
-		}
+    public List<String> getLabels() {
+      return this.labels;
+    }
 
-		public void setLabels(List<String> labels) {
-			this.labels = labels;
-		}
+    public void setLabels(List<String> labels) {
+      this.labels = labels;
+    }
 
-	}
+  }
 
 }

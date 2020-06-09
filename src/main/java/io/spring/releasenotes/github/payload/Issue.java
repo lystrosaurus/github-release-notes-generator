@@ -27,52 +27,52 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Issue {
 
-	private final String number;
+  private final String number;
 
-	private final String title;
+  private final String title;
 
-	private final User user;
+  private final User user;
 
-	private final List<Label> labels;
+  private final List<Label> labels;
 
-	private final String url;
+  private final String url;
 
-	private final PullRequest pullRequest;
+  private final PullRequest pullRequest;
 
-	public Issue(@JsonProperty("number") String number, @JsonProperty("title") String title,
-			@JsonProperty("user") User user, @JsonProperty("labels") List<Label> labels,
-			@JsonProperty("html_url") String url, @JsonProperty("pull_request") PullRequest pullRequest) {
-		super();
-		this.number = number;
-		this.title = title;
-		this.user = user;
-		this.labels = labels;
-		this.url = url;
-		this.pullRequest = pullRequest;
-	}
+  public Issue(@JsonProperty("number") String number, @JsonProperty("title") String title,
+      @JsonProperty("user") User user, @JsonProperty("labels") List<Label> labels,
+      @JsonProperty("html_url") String url, @JsonProperty("pull_request") PullRequest pullRequest) {
+    super();
+    this.number = number;
+    this.title = title;
+    this.user = user;
+    this.labels = labels;
+    this.url = url;
+    this.pullRequest = pullRequest;
+  }
 
-	public String getTitle() {
-		return this.title;
-	}
+  public String getTitle() {
+    return this.title;
+  }
 
-	public List<Label> getLabels() {
-		return this.labels;
-	}
+  public List<Label> getLabels() {
+    return this.labels;
+  }
 
-	public User getUser() {
-		return this.user;
-	}
+  public User getUser() {
+    return this.user;
+  }
 
-	public String getUrl() {
-		return this.url;
-	}
+  public String getUrl() {
+    return this.url;
+  }
 
-	public String getNumber() {
-		return this.number;
-	}
+  public String getNumber() {
+    return this.number;
+  }
 
-	public PullRequest getPullRequest() {
-		return this.pullRequest;
-	}
+  public PullRequest getPullRequest() {
+    return this.pullRequest;
+  }
 
 }
