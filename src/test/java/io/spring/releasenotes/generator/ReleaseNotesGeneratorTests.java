@@ -167,7 +167,7 @@ public class ReleaseNotesGeneratorTests {
 	}
 
 	public Issue newPullRequest(String title, String number, Type type, String url, User user) {
-		return new Issue(number, title, user, type.getLabels(), url, new PullRequest("https://example.com"));
+		return new Issue(number, title, user, type.getLabels(), url, new PullRequest(1));
 	}
 
 	private enum Type {

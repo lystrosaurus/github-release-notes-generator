@@ -41,7 +41,7 @@ public class Issue {
 
   public Issue(@JsonProperty("id") String number, @JsonProperty("title") String title,
       @JsonProperty("author") User user, @JsonProperty("labels") List<Label> labels,
-      @JsonProperty("web_url") String url, @JsonProperty("pull_request") PullRequest pullRequest) {
+      @JsonProperty("web_url") String url, @JsonProperty("merge_requests_count") PullRequest pullRequest) {
     super();
     this.number = number;
     this.title = title;

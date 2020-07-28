@@ -25,14 +25,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class PullRequest {
 
-  private final String url;
+  private final Integer mergeRequestsCount;
 
-  public PullRequest(@JsonProperty("url") String url) {
-    this.url = url;
+  public PullRequest( Integer mergeRequestsCount) {
+    this.mergeRequestsCount = mergeRequestsCount;
   }
 
-  public String getUrl() {
-    return this.url;
+  public Integer getMergeRequestsCount() {
+    return this.mergeRequestsCount;
   }
 
 }

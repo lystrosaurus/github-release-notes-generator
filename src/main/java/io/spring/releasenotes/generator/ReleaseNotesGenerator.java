@@ -107,7 +107,7 @@ public class ReleaseNotesGenerator {
 
   private Set<User> getContributors(List<Issue> issues) {
     return issues.stream()
-        .filter((issue) -> issue.getPullRequest() != null)
+        .filter((issue) -> issue.getPullRequest() != null && issue.getPullRequest().getMergeRequestsCount() >= 1)
         .map(Issue::getUser)
         .collect(Collectors.toSet());
   }
